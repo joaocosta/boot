@@ -1,2 +1,4 @@
 *.iso
 centos8
+vpass
+ks.cfg
