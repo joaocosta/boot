@@ -10,9 +10,9 @@ sed "s/ANSIBLE_VAULT_PASS/$ANSIBLE_VAULT_PASS/g" $SCRIPT_DIR/fx-centos8.ks > $SC
 
 virt-install \
     --name fxdev00 \
-    --memory 8192 \
+    --memory 4096 \
     --vcpus 2 \
-    --disk size=40 \
+    --disk size=20 \
     --location $SCRIPT_DIR/CentOS-8.4.2105-x86_64-dvd1.iso \
     --os-variant centos8 \
     --graphics none \
