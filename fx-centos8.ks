@@ -98,11 +98,13 @@ cat << EOF > /root/ansible-config-me.sh
 set -euo pipefail
 
 cd /tmp/fx-ansible/plays
-ansible-playbook -i ../environments/development fx.yml >> /root/ansible-run-fx.yml.log
-ansible-playbook dev-asroot.yml >> /root/ansible-run-fx.yml.log
+ansible-playbook -i ../environments/development fx.yml 2>&1 >> /root/ansible-run-fx.yml.log
+ansible-playbook dev-asroot.yml 2>&1 >> /root/ansible-run-fx.yml.log
 
-docker run --rm -v /root/fx/cfg:/etc/fxtrader --link fxdatafeed:fxdatafeed fxtrader/finance-hostedtrader bash -c "fx-create-db-schema.pl | fx-db-client.pl" >> /root/ansible-run-fx.yml.log
-docker run --rm --link snipers-db:snipers-db fxtrader/snipers-api ruby /webapp/db/schema.rb >> /root/ansible-run-fx.yml.log
+docker run --rm -v /root/fx/cfg:/etc/fxtrader --network fx-docker fxtrader/finance-hostedtrader bash -c "fx-create-db-schema.pl | fx-db-client.pl" 2>&1 >> /root/ansible-run-fx.yml.log
+docker run --rm --network fx-docker fxtrader/snipers-api ruby /webapp/db/schema.rb 2>&1 >> /root/ansible-run-fx.yml.log
+docker run --rm --network fx-docker -v /root/fx/cfg:/etc/fxtrader fxtrader/finance-hostedtrader fx-download.pl --timeframes=60 --numItems=50000 --verbose
+
 
 systemctl disable ansible-config-me.service
 EOF
