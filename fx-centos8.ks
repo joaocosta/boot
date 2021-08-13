@@ -67,14 +67,14 @@ EOF
 ssh-keyscan github.com >> /etc/ssh/ssh_known_hosts
 
 # Clone the https url so that an ssh key is not needed
-git clone https://github.com/fx-trader/fx-ansible.git /root/fx-ansible
+git clone https://github.com/fx-trader/fx-ansible.git /tmp/fx-ansible
 
 # Change the protocol back to ssh so that when i start working with the machine later I can use an ssh key to authenticate git push
-sed -i 's|https://github.com/|git@github.com:|' /root/fx-ansible/.git/config
-/root/fx-ansible/extensions/setup/role_update.sh
+# # no longer needed but this is a neat snippet: sed -i 's|https://github.com/|git@github.com:|' /root/fx-ansible/.git/config
+/tmp/fx-ansible/extensions/setup/role_update.sh
 ansible-galaxy collection install -p /root/.ansible/collections ansible.posix
 
-echo ANSIBLE_VAULT_PASS > /root/fx-ansible/.vpass
+echo ANSIBLE_VAULT_PASS > /tmp/fx-ansible/.vpass
 
 
 cat << EOF > /etc/systemd/system/ansible-config-me.service
@@ -97,7 +97,7 @@ cat << EOF > /root/ansible-config-me.sh
 
 set -euo pipefail
 
-cd ~/fx-ansible/plays
+cd /tmp/fx-ansible/plays
 ansible-playbook -i ../environments/development fx.yml >> /root/ansible-run-fx.yml.log
 
 docker run --rm -v /root/fx/cfg:/etc/fxtrader --link fxdatafeed:fxdatafeed fxtrader/finance-hostedtrader bash -c "fx-create-db-schema.pl | fx-db-client.pl" >> /root/ansible-run-fx.yml.log
@@ -110,7 +110,4 @@ chmod 0755 /root/ansible-config-me.sh
 systemctl daemon-reload
 systemctl enable ansible-config-me.service
 
-#cd /root/fx-ansible/plays
-#ansible-playbook -i ../environments/development fx.yml
-#ansible-playbook dev.yml
 %end
