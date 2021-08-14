@@ -103,7 +103,7 @@ ansible-playbook dev-asroot.yml 2>&1 >> /root/ansible-run-fx.yml.log
 
 docker run --rm -v /root/fx/cfg:/etc/fxtrader --network fx-docker fxtrader/finance-hostedtrader bash -c "fx-create-db-schema.pl | fx-db-client.pl" 2>&1 >> /root/ansible-run-fx.yml.log
 docker run --rm --network fx-docker fxtrader/snipers-api ruby /webapp/db/schema.rb 2>&1 >> /root/ansible-run-fx.yml.log
-docker run --rm --network fx-docker -v /root/fx/cfg:/etc/fxtrader fxtrader/finance-hostedtrader fx-download.pl --timeframes=60 --numItems=50000 --verbose
+docker run --rm --network fx-docker -v /root/fx/cfg:/etc/fxtrader fxtrader/finance-hostedtrader fx-download.pl --timeframes=60 --numItems=50000 --verbose 2>&1 >> /root/ansible-run-fx.yml.log
 
 
 systemctl disable ansible-config-me.service
