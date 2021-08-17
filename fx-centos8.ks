@@ -61,8 +61,9 @@ yum -y module reset nginx
 yum -y module enable nginx:1.20
 
 augtool -s <<EOF
-set /files/etc/grub.conf/timeout 0
+set /files/etc/default/grub/GRUB_TIMEOUT 0
 EOF
+grub2-mkconfig -o /boot/grub2/grub.cfg
 
 ssh-keyscan github.com >> /etc/ssh/ssh_known_hosts
 
