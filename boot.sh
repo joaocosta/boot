@@ -6,14 +6,14 @@ SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )"
 
 ANSIBLE_VAULT_PASS=`cat $SCRIPT_DIR/vpass`
 
-sed "s/ANSIBLE_VAULT_PASS/$ANSIBLE_VAULT_PASS/g" $SCRIPT_DIR/fx-centos8.ks > $SCRIPT_DIR/ks.cfg
+sed "s/ANSIBLE_VAULT_PASS/$ANSIBLE_VAULT_PASS/g" $SCRIPT_DIR/fx.ks > $SCRIPT_DIR/ks.cfg
 
 virt-install \
     --name fxdev00 \
     --memory 2048 \
     --vcpus 2 \
     --disk size=20 \
-    --location $SCRIPT_DIR/CentOS-8.4.2105-x86_64-dvd1.iso \
+    --location $SCRIPT_DIR/Rocky-8.5-x86_64-dvd1.iso \
     --os-variant centos8 \
     --graphics none \
     --initrd-inject $SCRIPT_DIR/ks.cfg \
